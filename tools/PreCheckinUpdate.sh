@@ -1,79 +1,71 @@
 #!/bin/bash
 set -e
 
-#
-# See if CDocs has been built; if not sync and build
-#
-if [ ! -d "/Source/CDocs" ]; then
-
-    if [ -d "/Source/CDocs_tmp" ]; then
-        rm -r -f /Source/CDocs_tmp
-    fi
-
-    git clone https://github.com/chgray/CDocs /Source/CDocs_tmp
-    cd /Source/CDocs_tmp
-    git checkout user/chgray/update_ubuntu
-    mv /Source/CDocs_tmp /Source/CDocs
+# Check for required environment variable
+if [ -z "${CDOCS_MARKDOWN_RENDER_PATH}" ]; then
+    echo "ERROR: CDOCS_MARKDOWN_RENDER_PATH environment variable must be set"
+    exit 1
 fi
+
+# Verify the path exists and contains the required binary
+if [ ! -f "${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender/bin/Debug/net8.0/CDocsMarkdownCommentRender" ]; then
+    echo "ERROR: CDocsMarkdownCommentRender binary not found in CDOCS_MARKDOWN_RENDER_PATH: ${CDOCS_MARKDOWN_RENDER_PATH}"
+    exit 1
+fi
+
+if [ -z "${DT_BOUND_DIR}" ]; then
+    echo "ERROR: DT_BOUND_DIR environment variable must be set"
+    exit 1
+fi
+
+
 
 #
 # See if the pandoc image exists; if not, pull it
 #
-set +e
-podman image exists docker.io/chgray123/chgray_repro:pandoc
+# set +e
+# docker image existshgray123/chgray_repro:pandoc
 
-if [ $? -ne 0 ]; then
-    set -e
-    echo "Pulling pandoc image..."
-    podman image pull docker.io/chgray123/chgray_repro:pandoc
-fi
+# if [ $? -ne 0 ]; then
+#     set -e
+#     echo "Pulling pandoc image..."
+#     docker image pull docker.io/chgray123/chgray_repro:pandoc
+# fi
 
-set +e
-podman image exists docker.io/chgray123/chgray_repro:cdocs.mermaid
+# set +e
+# docker image exists chgray123/chgray_repro:cdocs.mermaid
 
-if [ $? -ne 0 ]; then
-    set -e
-    echo "Pulling cdocs.mermaid image..."
-    podman image pull docker.io/chgray123/chgray_repro:cdocs.mermaid
-fi
-set -e
+# if [ $? -ne 0 ]; then
+#     set -e
+#     echo "Pulling cdocs.mermaid image..."
+#     docker image pull docker.io/chgray123/chgray_repro:cdocs.mermaid
+# fi
+# set -e
 
-#
-# Docker build w/ AMD64, on ARM64 results in segfault when powershell is installed
-#   do the install here, one time
-#
-if [ ! -f /root/.dotnet/tools/pwsh ]; then
-    echo "Installing powershell (this may take a few minutes)..."
-    dotnet tool install powershell --global
-fi
-
-#
-# Build CDocsMarkdownCommentRender
-#
-cd /Source/CDocs/tools/CDocsMarkdownCommentRender
-dotnet build .
 
 #
 # Setup the Python environment
 #
-if [ ! -d "/mkdocs_python" ]; then
-    echo "ERROR: /mkdocs_python not found"
-    exit 1
-fi
-source /mkdocs_python/bin/activate
+# if [ ! -d "/mkdocs_python" ]; then
+#     echo "ERROR: /mkdocs_python not found"
+#     exit 1
+# fi
+# source /mkdocs_python/bin/activate
 
 #
 # READ-WRITE Update Status Page, Probe Images, etc
 #
-cd /data/docs/docs
+cd ../docs/docs
 
 echo "Updating Status..."
 python3 ../../tools/_CalculateStatus.py
 ../../tools/_CalculateStatus.gnuplot
 
 echo "Rebuilding Probe Spider..."
-../../tools/_BuildProbeSpider.gnuplot
+gnuplot ../../tools/_BuildProbeSpider.gnuplot
 
+
+exit 1
 #
 # READ-ONLY: Do Binding and create content in docx/pdf/epub
 #
@@ -114,10 +106,10 @@ inputFile=./bound.md
 
 
 args="--toc --toc-depth 4 -N -V papersize=a5 --filter CDocsMarkdownCommentRender"
-pandoc $inputFile -o /data/bound/epub_$fileName.epub --epub-cover-image=../orig_media/DynamicTelemetry.CoPilot.Image.png $args
-pandoc $inputFile -o /data/bound/$fileName.pdf -H /data/tools/buildAsBook/header.tex $args
-pandoc $inputFile -o /data/bound/$fileName.docx $args
-pandoc ./bound.md -o /data/bound/$fileName.json $args
+pandoc $inputFile -o "$DT_BOUND_DIR/epub_$fileName.epub" --epub-cover-image=../orig_media/DynamicTelemetry.CoPilot.Image.png $args
+pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.pdf" -H /data/tools/buildAsBook/header.tex $args
+pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.docx" $args
+pandoc ./bound.md -o "$DT_BOUND_DIR/$fileName.json" $args
 
-cp ./bound.md /data/bound
+cp ./bound.md "$DT_BOUND_DIR"
 echo "Done!"

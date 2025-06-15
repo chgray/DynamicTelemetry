@@ -1,5 +1,6 @@
 import glob
 import re
+import os
 from collections import defaultdict
 
 review_status_counts = defaultdict(int)
@@ -30,7 +31,7 @@ for(file) in glob.glob("../docs/*.md"):
             break # Only print the first match
 
 
-with open("/data/bound/Status.csv", "w") as f:
+with open(os.path.join(os.environ['DT_BOUND_DIR'], "Status.csv"), "w") as f:
     print("State, Count", file=f)
     for (key, value) in review_status_counts.items():
         print(key + "," + str(value), file=f)
@@ -50,4 +51,3 @@ with open("../orig_media/GeneratedFileStatus.md", "w") as f:
             print("| [" + file + "](" + file + ")  | " + str(wordCounts[file]) + "|", file=f)
 
         print("\n", file=f)
-
