@@ -18,6 +18,15 @@ if [ -z "${DT_BOUND_DIR}" ]; then
     exit 1
 fi
 
+if [ -z "${DT_DOCS_DIR}" ]; then
+    echo "ERROR: DT_DOCS_DIR environment variable must be set"
+    exit 1
+fi
+
+if [ -z "${DT_ORIG_MEDIA_DIR}" ]; then
+    echo "ERROR: DT_DOCS_DIR environment variable must be set"
+    exit 1
+fi
 
 
 #
@@ -59,10 +68,15 @@ cd ../docs/docs
 
 echo "Updating Status..."
 python3 ../../tools/_CalculateStatus.py
-../../tools/_CalculateStatus.gnuplot
 
-echo "Rebuilding Probe Spider..."
-gnuplot ../../tools/_BuildProbeSpider.gnuplot
+#
+# BUGBUG: use a container to call gnuplot
+#
+# echo "Update Status with GNU Plot"
+# ../../tools/_CalculateStatus.gnuplot
+
+# echo "Rebuilding Probe Spider..."
+# gnuplot ../../tools/_BuildProbeSpider.gnuplot
 
 
 exit 1
