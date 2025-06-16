@@ -6,6 +6,7 @@ if [ -z "${CDOCS_MARKDOWN_RENDER_PATH}" ]; then
     echo "ERROR: CDOCS_MARKDOWN_RENDER_PATH environment variable must be set"
     exit 1
 fi
+export PATH=${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender/bin/Debug/net8.0:$PATH$
 
 # Verify the path exists and contains the required binary
 if [ ! -f "${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender/bin/Debug/net8.0/CDocsMarkdownCommentRender" ]; then
@@ -79,14 +80,17 @@ python3 ../../tools/_CalculateStatus.py
 # gnuplot ../../tools/_BuildProbeSpider.gnuplot
 
 
-exit 1
+
 #
 # READ-ONLY: Do Binding and create content in docx/pdf/epub
 #
 cd "$DT_DOCS_DIR"
 
+
 echo "Binding and generating TOC"
-pwsh ../../tools/buildAsBook/bind.ps1
+python ../../tools/buildAsBook/bind.py
+
+exit 1
 
 cd "$DT_BOUND_DIR"
 dos2unix ./bind.files

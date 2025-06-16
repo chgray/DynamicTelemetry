@@ -91,10 +91,11 @@ def process_markdown_files(docs_dir, bound_docs_dir, mkdocs_content):
         else:
             # Process existing markdown file
             file_path = line.split(':')[1].strip()
-            file_path = os.path.join(docs_dir, file_path)
+            file_path = os.path.join(docs_dir, "..", file_path)
 
             if not os.path.exists(file_path):
-                raise FileNotFoundError(f"File doesn't exist: {file_path}")
+                msg = f"BAD: File doesn't exist: {file_path}"
+                raise FileNotFoundError(msg)
 
             source_file = file_path
             dest_leaf = os.path.basename(file_path)
@@ -106,10 +107,12 @@ def process_markdown_files(docs_dir, bound_docs_dir, mkdocs_content):
         print(f"    {cmd}")
 
         if os.system(cmd) != 0:
-            raise RuntimeError(f"Pandoc conversion failed for {source_file}")
+            msg = f"Pandoc conversion failed for {source_file}"
+            raise RuntimeError(msg)
 
         if not os.path.exists(dest_file):
-            raise RuntimeError(f"Output file not created: {dest_file}")
+            msg = f"Output file not created: {dest_file}"
+            raise RuntimeError(msg)
 
         bind_files.append(dest_leaf)
 
