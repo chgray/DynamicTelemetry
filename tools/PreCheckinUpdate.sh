@@ -30,6 +30,16 @@ if [ -z "${DT_ORIG_MEDIA_DIR}" ]; then
 fi
 
 
+if [ ! -d "${DT_BOUND_DIR}" ]; then
+    echo "ERROR: ${DT_BOUND_DIR} not found"
+    mkdir ${DT_BOUND_DIR}
+fi
+
+if [ ! -d "${DT_ORIG_MEDIA_DIR}" ]; then
+    echo "ERROR: ${DT_ORIG_MEDIA_DIR} not found"
+    mkdir ${DT_ORIG_MEDIA_DIR}
+fi
+
 #
 # See if the pandoc image exists; if not, pull it
 #
