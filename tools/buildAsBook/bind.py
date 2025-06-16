@@ -31,7 +31,7 @@ def create_title_file(bound_docs_path):
 
 def copy_doc_files(source_dir, dest_dir):
     """Copy all documentation files to bound_docs."""
-    print("\nCopying all doc files into /data/docs/bound_docs, for processing\n")
+    print(f"\nCopying all doc files into {dest_dir}, for processing\n")
     for item in os.listdir(source_dir):
         source = os.path.join(source_dir, item)
         destination = os.path.join(dest_dir, item)
@@ -124,7 +124,10 @@ def main():
     os.environ['PYTHONUNBUFFERED'] = '1'
 
     # Change to docs directory
-    os.chdir('/data/docs/docs')
+    docs_dir = os.environ.get('DT_DOCS_DIR')
+    if not docs_dir:
+        raise EnvironmentError("DT_DOCS_DIR environment variable must be set")
+    os.chdir(docs_dir)
 
     # Set up DB directory
     db_dir = os.path.abspath(os.path.join('..', 'orig_media'))
@@ -135,7 +138,8 @@ def main():
         mkdocs_content = f.readlines()
 
     # Set up bound_docs directory
-    bound_docs_dir = '/data/docs/bound_docs'
+    base_dir = os.path.dirname(docs_dir)
+    bound_docs_dir = os.path.join(base_dir, 'bound_docs')
     ensure_directory(bound_docs_dir)
 
     # Remove existing files
@@ -148,10 +152,10 @@ def main():
     copy_doc_files('.', bound_docs_dir)
 
     try:
-        os.chdir('/data/docs')
-        process_markdown_files('/data/docs', bound_docs_dir, mkdocs_content)
+        os.chdir(base_dir)
+        process_markdown_files(base_dir, bound_docs_dir, mkdocs_content)
     finally:
-        os.chdir('/data/docs')
+        os.chdir(base_dir)
 
 if __name__ == '__main__':
     main()

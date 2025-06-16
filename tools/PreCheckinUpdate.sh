@@ -24,7 +24,7 @@ if [ -z "${DT_DOCS_DIR}" ]; then
 fi
 
 if [ -z "${DT_ORIG_MEDIA_DIR}" ]; then
-    echo "ERROR: DT_DOCS_DIR environment variable must be set"
+    echo "ERROR: DT_ORIG_MEDIA_DIR environment variable must be set"
     exit 1
 fi
 
@@ -83,12 +83,12 @@ exit 1
 #
 # READ-ONLY: Do Binding and create content in docx/pdf/epub
 #
-cd /data/docs/docs
+cd "$DT_DOCS_DIR"
 
 echo "Binding and generating TOC"
 pwsh ../../tools/buildAsBook/bind.ps1
 
-cd /data/docs/bound_docs
+cd "$DT_BOUND_DIR"
 dos2unix ./bind.files
 pandoc -i $(cat ./bind.files) -o ./_bound.tmp.md
 
@@ -105,8 +105,9 @@ cat ./title.txt ./_bound.tmp.md | grep -v mp4 > ./bound.md
 
 echo "Building bound contents; in docx, pdf, and epub"
 
-if [ ! -f /data/tools/buildAsBook/header.tex ]; then
-    echo "ERROR: /data/tools/buildAsBook/header.tex not found"
+header_path="$DT_DOCS_DIR/../../tools/buildAsBook/header.tex"
+if [ ! -f "$header_path" ]; then
+    echo "ERROR: header.tex not found at: $header_path"
     exit 1
 fi
 
@@ -121,7 +122,7 @@ inputFile=./bound.md
 
 args="--toc --toc-depth 4 -N -V papersize=a5 --filter CDocsMarkdownCommentRender"
 pandoc $inputFile -o "$DT_BOUND_DIR/epub_$fileName.epub" --epub-cover-image=../orig_media/DynamicTelemetry.CoPilot.Image.png $args
-pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.pdf" -H /data/tools/buildAsBook/header.tex $args
+pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.pdf" -H "$header_path" $args
 pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.docx" $args
 pandoc ./bound.md -o "$DT_BOUND_DIR/$fileName.json" $args
 
