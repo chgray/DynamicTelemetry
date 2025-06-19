@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
+export CDOCS_MARKDOWN_RENDER_PATH=$(pwd)/../../CDocs
+export DT_BOUND_DIR=$(pwd)/../docs/bound_docs
+export DT_DOCS_DIR=$(pwd)/../docs/docs
+export DT_ORIG_MEDIA_DIR=$(pwd)/../docs/orig_media
+
+
 # Check for required environment variable
 if [ -z "${CDOCS_MARKDOWN_RENDER_PATH}" ]; then
     echo "ERROR: CDOCS_MARKDOWN_RENDER_PATH environment variable must be set"
@@ -13,6 +19,8 @@ if [ ! -f "${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender/bin/De
     echo "ERROR: CDocsMarkdownCommentRender binary not found in CDOCS_MARKDOWN_RENDER_PATH: ${CDOCS_MARKDOWN_RENDER_PATH}"
     exit 1
 fi
+
+dotnet build ${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender
 
 if [ -z "${DT_BOUND_DIR}" ]; then
     echo "ERROR: DT_BOUND_DIR environment variable must be set"
@@ -75,6 +83,7 @@ fi
 # READ-WRITE Update Status Page, Probe Images, etc
 #
 cd ../docs/docs
+ls
 
 echo "Updating Status..."
 python3 ../../tools/_CalculateStatus.py
@@ -94,13 +103,12 @@ python3 ../../tools/_CalculateStatus.py
 # READ-ONLY: Do Binding and create content in docx/pdf/epub
 #
 cd "$DT_DOCS_DIR"
-
+ls
 
 echo "Binding and generating TOC"
 python ../../tools/buildAsBook/bind.py
 
-exit 1
-
+echo "Changing to dir : $DT_BOUND_DIR"
 cd "$DT_BOUND_DIR"
 dos2unix ./bind.files
 pandoc -i $(cat ./bind.files) -o ./_bound.tmp.md
@@ -130,14 +138,23 @@ echo ""
 echo "Building bound contents; in docx, pdf, and epub"
 
 #fileName=testing_doc
-inputFile=./bound.md
+inputFile=$DT_BOUND_DIR/bound.md
 
+if [ ! -f "$inputFile" ]; then
+    echo "ERROR: $inputFile not found"
+    exit 1
+fi
 
-args="--toc --toc-depth 4 -N -V papersize=a5 --filter CDocsMarkdownCommentRender"
+echo "  INPUT_FILE : $inputFile"
+echo "DT_BOUND_DIR : $DT_BOUND_DIR"
+
+args="--toc --toc-depth 4 -N -V papersize=a5"
+# echo  --filter CDocsMarkdownCommentRender
+
 pandoc $inputFile -o "$DT_BOUND_DIR/epub_$fileName.epub" --epub-cover-image=../orig_media/DynamicTelemetry.CoPilot.Image.png $args
-pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.pdf" -H "$header_path" $args
+# pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.pdf" -H "$header_path" $args
 pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.docx" $args
 pandoc ./bound.md -o "$DT_BOUND_DIR/$fileName.json" $args
 
-cp ./bound.md "$DT_BOUND_DIR"
+#cp ./bound.md "$DT_BOUND_DIR"
 echo "Done!"

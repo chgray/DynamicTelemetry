@@ -79,8 +79,7 @@ def process_markdown_files(docs_dir, bound_docs_dir, mkdocs_content):
             # Generate new section
             title = line.replace('-', '').replace(':', '').strip()
             file_id = str(uuid.uuid4())
-            print(f"Generating : [{line}]")
-            print(f" ==> {title} ==> {file_id}")
+            print(f"Generating : [{line}] ==> {title} ==> {file_id}")
 
             source_file = os.path.join(bound_docs_dir, f"{file_id}.generated.md")
             dest_leaf = f"{file_id}.generated.converted.md"
@@ -90,8 +89,12 @@ def process_markdown_files(docs_dir, bound_docs_dir, mkdocs_content):
                 f.write(f"# {title}\n")
         else:
             # Process existing markdown file
+            #print(f"     LINE : {line}")
             file_path = line.split(':')[1].strip()
-            file_path = os.path.join(docs_dir, "..", file_path)
+            file_path = os.path.join(docs_dir, file_path)
+
+            #print(f" DOCS_DIR : {docs_dir}")
+            #print(f"FILE_PATH : {file_path}")
 
             if not os.path.exists(file_path):
                 msg = f"BAD: File doesn't exist: {file_path}"
@@ -102,22 +105,27 @@ def process_markdown_files(docs_dir, bound_docs_dir, mkdocs_content):
 
         # Convert using pandoc
         dest_file = os.path.join(bound_docs_dir, dest_leaf)
-        cmd = f'pandoc -i "{source_file}" -o "{dest_file}" --filter CDocsMarkdownCommentRender'
-        print(f"Converting {source_file} ==> {dest_leaf}")
-        print(f"    {cmd}")
+        cmd = f'pandoc -i "{source_file}" -o "{dest_file}"' # --filter CDocsMarkdownCommentRender'
+
+        print("")
+        print(f"# Converting {source_file} ==> {dest_leaf}")
 
         if os.system(cmd) != 0:
             msg = f"Pandoc conversion failed for {source_file}"
             raise RuntimeError(msg)
-
+        #
         if not os.path.exists(dest_file):
             msg = f"Output file not created: {dest_file}"
             raise RuntimeError(msg)
 
+        print(cmd)
+
         bind_files.append(dest_leaf)
 
     # Write bind.files
-    with open(os.path.join(bound_docs_dir, 'bind.files'), 'w') as f:
+    bind_filename = os.path.join(bound_docs_dir, 'bind.files')
+    print(f"*(*(*)*)*)*)* BIND FILE {bind_filename}")
+    with open(bind_filename, 'w') as f:
         f.write('\n'.join(bind_files))
 
 def main():
@@ -135,6 +143,9 @@ def main():
     # Set up DB directory
     db_dir = os.path.abspath(os.path.join('..', 'orig_media'))
     os.environ['CDOCS_DB'] = db_dir
+
+    print(f">>>>>>DT_DOCS_DIR={docs_dir}")
+
 
     # Read mkdocs.yml
     with open('../../mkdocs.yml', 'r') as f:
