@@ -2,6 +2,7 @@ import glob
 import re
 import os
 from collections import defaultdict
+from pathlib import Path
 
 review_status_counts = defaultdict(int)
 fileinfo = defaultdict(list)
@@ -35,7 +36,8 @@ with open(os.path.join(os.environ['DT_BOUND_DIR'], "Status.csv"), "w") as f:
     for (key, value) in review_status_counts.items():
         print(key + "," + str(value), file=f)
 
-with open(os.path.join(os.environ['DT_ORIG_MEDIA_DIR'], "GeneratedFileStatus.md"), "w") as f:
+base_path = os.environ['DT_ORIG_MEDIA_DIR']
+with open(os.path.join(base_path, "GeneratedFileStatus.md"), "w") as f:
     print("---", file=f)
     print("author: Generated File", file=f)
     print("status: Level5", file=f)
@@ -47,6 +49,7 @@ with open(os.path.join(os.environ['DT_ORIG_MEDIA_DIR'], "GeneratedFileStatus.md"
         print("| File | Word Count |", file=f)
         print("|------|------------|", file=f)
         for(file) in files:
+            file = os.path.relpath(file, base_path)
             print("| [" + file + "](" + file + ")  | " + str(wordCounts[file]) + "|", file=f)
 
         print("\n", file=f)
