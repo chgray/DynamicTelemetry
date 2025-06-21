@@ -89,13 +89,13 @@ echo "Updating Status..."
 python3 ../../tools/_CalculateStatus.py
 
 #
-# BUGBUG: use a container to call gnuplot
+# use a container to call gnuplot
 #
-# echo "Update Status with GNU Plot"
-# ../../tools/_CalculateStatus.gnuplot
+echo "Update Status with GNU Plot"
+../../tools/_CalculateStatus.gnuplot
 
-# echo "Rebuilding Probe Spider..."
-# gnuplot ../../tools/_BuildProbeSpider.gnuplot
+echo "Rebuilding Probe Spider..."
+gnuplot ../../tools/_BuildProbeSpider.gnuplot
 
 
 
