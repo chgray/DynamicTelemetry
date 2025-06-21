@@ -152,7 +152,7 @@ args="--toc --toc-depth 4 -N -V papersize=a5"
 # echo  --filter CDocsMarkdownCommentRender
 
 pandoc $inputFile -o "$DT_BOUND_DIR/epub_$fileName.epub" --epub-cover-image=../orig_media/DynamicTelemetry.CoPilot.Image.png $args
-# pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.pdf" -H "$header_path" $args
+#pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.pdf" -H "$header_path" $args
 pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.docx" $args
 pandoc ./bound.md -o "$DT_BOUND_DIR/$fileName.json" $args
 
