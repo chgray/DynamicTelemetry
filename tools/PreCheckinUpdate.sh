@@ -137,7 +137,6 @@ echo ""
 echo ""
 echo "Building bound contents; in docx, pdf, and epub"
 
-#fileName=testing_doc
 inputFile=$DT_BOUND_DIR/bound.md
 
 if [ ! -f "$inputFile" ]; then
@@ -148,13 +147,11 @@ fi
 echo "  INPUT_FILE : $inputFile"
 echo "DT_BOUND_DIR : $DT_BOUND_DIR"
 
-args="--toc --toc-depth 4 -N -V papersize=a5"
-# echo  --filter CDocsMarkdownCommentRender
+args="--toc --toc-depth 4 -N -V papersize=a5 --filter CDocsMarkdownCommentRender"
 
 pandoc $inputFile -o "$DT_BOUND_DIR/epub_$fileName.epub" --epub-cover-image=../orig_media/DynamicTelemetry.CoPilot.Image.png $args
-#pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.pdf" -H "$header_path" $args
+pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.pdf" -H "$header_path" $args
 pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.docx" $args
 pandoc ./bound.md -o "$DT_BOUND_DIR/$fileName.json" $args
 
-#cp ./bound.md "$DT_BOUND_DIR"
 echo "Done!"
