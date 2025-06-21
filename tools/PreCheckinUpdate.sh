@@ -51,24 +51,24 @@ fi
 #
 # See if the pandoc image exists; if not, pull it
 #
-# set +e
-# docker image existshgray123/chgray_repro:pandoc
+set +e
+podman image exists docker.io/chgray123/chgray_repro:pandoc
 
-# if [ $? -ne 0 ]; then
-#     set -e
-#     echo "Pulling pandoc image..."
-#     docker image pull docker.io/chgray123/chgray_repro:pandoc
-# fi
+if [ $? -ne 0 ]; then
+    set -e
+    echo "Pulling pandoc image..."
+    podman image pull docker.io/chgray123/chgray_repro:pandoc
+fi
 
-# set +e
-# docker image exists chgray123/chgray_repro:cdocs.mermaid
+set +e
+podman image exists chgray123/chgray_repro:cdocs.mermaid
 
-# if [ $? -ne 0 ]; then
-#     set -e
-#     echo "Pulling cdocs.mermaid image..."
-#     docker image pull docker.io/chgray123/chgray_repro:cdocs.mermaid
-# fi
-# set -e
+if [ $? -ne 0 ]; then
+    set -e
+    echo "Pulling cdocs.mermaid image..."
+    podman image pull docker.io/chgray123/chgray_repro:cdocs.mermaid
+fi
+set -e
 
 #
 # Setup the Python environment
