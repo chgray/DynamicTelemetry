@@ -44,10 +44,32 @@ def copy_doc_files(source_dir, dest_dir):
             shutil.copy2(source, destination)
     print("Copy Complete")
 
+def run_pandoc(cmd, dest_file):
+    """Run Pandoc"""
+
+
+    print("")
+    print("")
+    print("--------------------------------")
+    print(f"***PANDOC****")
+    print(f"       ARGS: {cmd}")
+    print(f"        CWD: {os.getcwd()}")
+
+    if os.system(cmd) != 0:
+        msg = f"***Pandoc conversion failed for {cmd}"
+        raise RuntimeError(msg)
+    #
+    if not os.path.exists(dest_file):
+        msg = f"***Output file not created: {dest_file}"
+        raise RuntimeError(msg)
+
+
 def process_markdown_files(docs_dir, bound_docs_dir, mkdocs_content):
     """Process markdown files based on navigation markers."""
     in_nav = False
     bind_files = []
+
+    print(f"PROCESS_MARKDOWN_FILES:  {os.getcwd()}")
 
     for line in mkdocs_content:
         line = line.strip()
@@ -105,20 +127,12 @@ def process_markdown_files(docs_dir, bound_docs_dir, mkdocs_content):
 
         # Convert using pandoc
         dest_file = os.path.join(bound_docs_dir, dest_leaf)
-        cmd = f'pandoc -i "{source_file}" -o "{dest_file}"' # --filter CDocsMarkdownCommentRender'
+        cmd = f'pandoc -i "{source_file}" -o "{dest_file}" --filter CDocsMarkdownCommentRender'
 
         print("")
         print(f"# Converting {source_file} ==> {dest_leaf}")
 
-        if os.system(cmd) != 0:
-            msg = f"Pandoc conversion failed for {source_file}"
-            raise RuntimeError(msg)
-        #
-        if not os.path.exists(dest_file):
-            msg = f"Output file not created: {dest_file}"
-            raise RuntimeError(msg)
-
-        print(cmd)
+        run_pandoc(cmd, dest_file)
 
         bind_files.append(dest_leaf)
 
@@ -166,7 +180,8 @@ def main():
     copy_doc_files('.', bound_docs_dir)
 
     try:
-        os.chdir(base_dir)
+        print(f"**CHANGING BASE DIR : {base_dir}")
+        os.chdir(docs_dir)
         process_markdown_files(base_dir, bound_docs_dir, mkdocs_content)
     finally:
         os.chdir(base_dir)
