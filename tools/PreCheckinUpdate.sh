@@ -51,22 +51,29 @@ fi
 #
 # See if the pandoc image exists; if not, pull it
 #
+if command -v docker &> /dev/null; then
+    echo "Using Docker."
+    container_tool="docker"
+else
+    container_tool="podman"
+fi
+
 set +e
-podman image exists docker.io/chgray123/chgray_repro:pandoc
+${container_tool} image exists docker.io/chgray123/chgray_repro:pandoc
 
 if [ $? -ne 0 ]; then
     set -e
     echo "Pulling pandoc image..."
-    podman image pull docker.io/chgray123/chgray_repro:pandoc
+    ${container_tool} image pull docker.io/chgray123/chgray_repro:pandoc
 fi
 
 set +e
-podman image exists chgray123/chgray_repro:cdocs.mermaid
+${container_tool} image exists chgray123/chgray_repro:cdocs.mermaid
 
 if [ $? -ne 0 ]; then
     set -e
     echo "Pulling cdocs.mermaid image..."
-    podman image pull docker.io/chgray123/chgray_repro:cdocs.mermaid
+    ${container_tool} image pull docker.io/chgray123/chgray_repro:cdocs.mermaid
 fi
 set -e
 
