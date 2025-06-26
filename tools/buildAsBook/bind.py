@@ -72,13 +72,13 @@ def process_markdown_files(docs_dir, bound_docs_dir, mkdocs_content):
     print(f"PROCESS_MARKDOWN_FILES:  {os.getcwd()}")
 
     for line in mkdocs_content:
-        line = line.strip()
+        #line = line.strip()
 
-        if line == "#<START_BINDING>":
+        if line.strip() == "#<START_BINDING>":
             print("Found NAV")
             in_nav = True
             continue
-        elif line == "#<END_BINDING>":
+        elif line.strip() == "#<END_BINDING>":
             print("End NAV")
             in_nav = False
             continue
@@ -87,17 +87,28 @@ def process_markdown_files(docs_dir, bound_docs_dir, mkdocs_content):
             continue
 
         # Skip empty lines and comments
-        if not line or line.startswith('#'):
+        if not line or line.strip().startswith('#'):
+            continue
+
+        if 0 == len(line.strip()):
             continue
 
         # Calculate indentation level
         separator_index = line.find('-')
+        os.environ['CDOCS_TAB'] = "0"
+
         if separator_index > 4:
-            tab_level = (separator_index - 4) // 4 if separator_index % 4 == 0 else 0
-            os.environ['CDOCS_TAB'] = str(tab_level)
+            seperatorx = separator_index
+
+            if 0 == (separator_index % 4):
+                seperatorx -= 4
+                seperatorx /= 4
+                os.environ['CDOCS_TAB'] = str(int(seperatorx))
+                print(f"Setting tab to {seperatorx}")
+
         os.environ['CDOCS_FILTER'] = '1'
 
-        if not line.endswith('.md'):
+        if not line.strip().endswith('.md'):
             # Generate new section
             title = line.replace('-', '').replace(':', '').strip()
             file_id = str(uuid.uuid4())
@@ -112,7 +123,7 @@ def process_markdown_files(docs_dir, bound_docs_dir, mkdocs_content):
         else:
             # Process existing markdown file
             #print(f"     LINE : {line}")
-            file_path = line.split(':')[1].strip()
+            file_path = line.strip().split(':')[1].strip()
             file_path = os.path.join(docs_dir, file_path)
 
             #print(f" DOCS_DIR : {docs_dir}")
