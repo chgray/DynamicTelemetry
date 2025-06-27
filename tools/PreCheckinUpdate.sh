@@ -89,21 +89,20 @@ set -e
 #
 # READ-WRITE Update Status Page, Probe Images, etc
 #
-cd ../docs/docs
-ls
-
+pwd
 echo "Updating Status..."
-python3 ../../tools/_CalculateStatus.py
+python3 ./_CalculateStatus.py
 
 #
 # use a container to call gnuplot
 #
 echo "Update Status with GNU Plot"
-../../tools/_CalculateStatus.gnuplot
+gnuplot ./_CalculateStatus.gnuplot
 
 echo "Rebuilding Probe Spider..."
-gnuplot ../../tools/_BuildProbeSpider.gnuplot
+gnuplot ./_BuildProbeSpider.gnuplot
 
+cd ../docs/docs
 
 
 #
@@ -158,7 +157,7 @@ args="--toc --toc-depth 4 -N -V papersize=a5"
 # --filter CDocsMarkdownCommentRender"
 
 pandoc $inputFile -o "$DT_BOUND_DIR/epub_$fileName.epub" --epub-cover-image=../orig_media/DynamicTelemetry.CoPilot.Image.png $args
-pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.pdf" -H "$header_path" $args
+#pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.pdf" -H "$header_path" $args
 pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.docx" $args
 pandoc ./bound.md -o "$DT_BOUND_DIR/$fileName.json" $args
 
