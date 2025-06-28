@@ -37,7 +37,6 @@ if [ -z "${DT_ORIG_MEDIA_DIR}" ]; then
     exit 1
 fi
 
-
 if [ ! -d "${DT_BOUND_DIR}" ]; then
     echo "ERROR: ${DT_BOUND_DIR} not found"
     mkdir ${DT_BOUND_DIR}
@@ -153,8 +152,7 @@ fi
 echo "  INPUT_FILE : $inputFile"
 echo "DT_BOUND_DIR : $DT_BOUND_DIR"
 
-args="--toc --toc-depth 4 -N -V papersize=a5"
-# --filter CDocsMarkdownCommentRender"
+args="--toc --toc-depth 4 -N -V papersize=a5 --filter CDocsMarkdownCommentRender"
 
 pandoc $inputFile -o "$DT_BOUND_DIR/epub_$fileName.epub" --epub-cover-image=../orig_media/DynamicTelemetry.CoPilot.Image.png $args
 #pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.pdf" -H "$header_path" $args
