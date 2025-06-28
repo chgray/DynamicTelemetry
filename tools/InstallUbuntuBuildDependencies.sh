@@ -10,7 +10,7 @@ export DEBIAN_FRONTEND=noninteractive
 #
 # Install necessary tools, if they're not already present
 #
-apt_packages="git podman dotnet8 gnuplot"
+apt_packages="git podman dotnet8 gnuplot pandoc"
 echo "Detecting / Installing necessary Ubuntu tools"
 if ! command -v git &> /dev/null; then
     echo "Installing Git"
@@ -29,6 +29,11 @@ if ! command -v dotnet &> /dev/null; then
 fi
 if ! command -v gnuplot &> /dev/null; then
     echo "Installing gnuplot"
+    sudo apt update
+    sudo apt install -y ${apt_packages}
+fi
+if ! command -v pandoc &> /dev/null; then
+    echo "Installing pandoc"
     sudo apt update
     sudo apt install -y ${apt_packages}
 fi
