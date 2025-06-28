@@ -6,6 +6,8 @@ export DT_BOUND_DIR=$(realpath $(pwd)/../docs/bound_docs)
 export DT_DOCS_DIR=$(realpath $(pwd)/../docs/docs)
 export DT_ORIG_MEDIA_DIR=$(realpath $(pwd)/../docs/orig_media)
 
+ls
+
 # Check for required environment variable
 if [ ! -d "${CDOCS_MARKDOWN_RENDER_PATH}" ]; then
     git clone --branch user/chgray/update_ubuntu http://github.com/chgray/CDocs ${CDOCS_MARKDOWN_RENDER_PATH}
