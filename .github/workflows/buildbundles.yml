@@ -11,4 +11,5 @@ jobs:
           node-version: '20'
       - run: ls
       - run: docker run ubuntu df
+      - run: ./tools/InstallUbuntuBuildDependencies.sh
       - run: ./tools/PreCheckinUpdate.sh
