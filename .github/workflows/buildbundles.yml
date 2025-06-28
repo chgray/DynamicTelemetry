@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is bundling documents together
 on: [push]
 jobs:
   check-bats-version:
-    runs-on: ubuntu-latest
+    runs-on: docker.io/chgray123/chgray_repro:pandoc
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
