@@ -14,23 +14,23 @@ apt_packages="git podman dotnet8 gnuplot"
 echo "Detecting / Installing necessary Ubuntu tools"
 if ! command -v git &> /dev/null; then
     echo "Installing Git"
-    apt update
-    apt install -y ${apt_packages}
+    sudo apt update
+    sudo apt install -y ${apt_packages}
 fi
 if ! command -v podman &> /dev/null; then
     echo "Installing podman"
-    apt update
-    apt install -y ${apt_packages}
+    sudo apt update
+    sudo apt install -y ${apt_packages}
 fi
 if ! command -v dotnet &> /dev/null; then
     echo "Installing dotnet"
-    apt update
-    apt install -y ${apt_packages}
+    sudo apt update
+    sudo apt install -y ${apt_packages}
 fi
 if ! command -v gnuplot &> /dev/null; then
     echo "Installing gnuplot"
-    apt update
-    apt install -y ${apt_packages}
+    sudo apt update
+    sudo apt install -y ${apt_packages}
 fi
 
 echo "Versions of tools:"
