@@ -1,26 +1,31 @@
 #!/bin/bash
 set -e
 
-export CDOCS_MARKDOWN_RENDER_PATH=$(pwd)/../../CDocs
-export DT_BOUND_DIR=$(pwd)/../docs/bound_docs
-export DT_DOCS_DIR=$(pwd)/../docs/docs
-export DT_ORIG_MEDIA_DIR=$(pwd)/../docs/orig_media
-
+export CDOCS_MARKDOWN_RENDER_PATH=$(realpath $(pwd)/../../CDocs)
+export DT_BOUND_DIR=$(realpath $(pwd)/../docs/bound_docs)
+export DT_DOCS_DIR=$(realpath $(pwd)/../docs/docs)
+export DT_ORIG_MEDIA_DIR=$(realpath $(pwd)/../docs/orig_media)
 
 # Check for required environment variable
-if [ -z "${CDOCS_MARKDOWN_RENDER_PATH}" ]; then
-    echo "ERROR: CDOCS_MARKDOWN_RENDER_PATH environment variable must be set"
-    exit 1
+if [ ! -d "${CDOCS_MARKDOWN_RENDER_PATH}" ]; then
+    git clone --branch user/chgray/update_ubuntu http://github.com/chgray/CDocs ${CDOCS_MARKDOWN_RENDER_PATH}
 fi
+
 export PATH=${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender/bin/Debug/net8.0:$PATH$
+
+export | grep CDOCS
+export | grep DT
 
 # Verify the path exists and contains the required binary
 if [ ! -f "${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender/bin/Debug/net8.0/CDocsMarkdownCommentRender" ]; then
     echo "ERROR: CDocsMarkdownCommentRender binary not found in CDOCS_MARKDOWN_RENDER_PATH: ${CDOCS_MARKDOWN_RENDER_PATH}"
+    dotnet build ${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender
+    #exit 1
+fi
+if [ ! -f "${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender/bin/Debug/net8.0/CDocsMarkdownCommentRender" ]; then
+    echo "ERROR: CDocsMarkdownCommentRender binary not found in CDOCS_MARKDOWN_RENDER_PATH: ${CDOCS_MARKDOWN_RENDER_PATH}"
     exit 1
 fi
-
-dotnet build ${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender
 
 if [ -z "${DT_BOUND_DIR}" ]; then
     echo "ERROR: DT_BOUND_DIR environment variable must be set"
@@ -50,11 +55,16 @@ fi
 #
 # See if the pandoc image exists; if not, pull it
 #
+echo "Determining if we're using docker or podman, docker preferred"
 if command -v docker &> /dev/null; then
     echo "Using Docker."
     container_tool="docker"
-else
+elif command -v podman &> /dev/null; then
+    echo "Using podman"
     container_tool="podman"
+else
+    echo "Either docker or podman are required"
+    exit 1
 fi
 
 set +e
