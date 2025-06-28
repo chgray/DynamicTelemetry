@@ -1,10 +1,14 @@
 #!/bin/bash
 set -e
 
-export CDOCS_MARKDOWN_RENDER_PATH=$(realpath $(pwd)/../../CDocs)
-export DT_BOUND_DIR=$(realpath $(pwd)/../docs/bound_docs)
-export DT_DOCS_DIR=$(realpath $(pwd)/../docs/docs)
-export DT_ORIG_MEDIA_DIR=$(realpath $(pwd)/../docs/orig_media)
+
+SCRIPT_PATH=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
+echo "Script path: $SCRIPT_PATH"
+
+export CDOCS_MARKDOWN_RENDER_PATH=$(realpath ${SCRIPT_PATH}/../../CDocs)
+export DT_BOUND_DIR=$(realpath ${SCRIPT_PATH}/../docs/bound_docs)
+export DT_DOCS_DIR=$(realpath ${SCRIPT_PATH}/../docs/docs)
+export DT_ORIG_MEDIA_DIR=$(realpath ${SCRIPT_PATH}/../docs/orig_media)
 
 ls
 
