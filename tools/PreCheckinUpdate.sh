@@ -91,6 +91,9 @@ if [ $? -ne 0 ]; then
 fi
 set -e
 
+# Start in our script directory
+cd ${SCRIPT_PATH}
+
 #
 # Setup the Python environment
 #
