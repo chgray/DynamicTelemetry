@@ -6,15 +6,43 @@ export DT_BOUND_DIR=$(realpath $(pwd)/../docs/bound_docs)
 export DT_DOCS_DIR=$(realpath $(pwd)/../docs/docs)
 export DT_ORIG_MEDIA_DIR=$(realpath $(pwd)/../docs/orig_media)
 
+export TZ=America/Los_Angeles
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US:en
+export LC_ALL=en_US.UTF-8
+export DEBIAN_FRONTEND=noninteractive
+
+#
+# Install necessary tools, if they're not already present
+#
+apt_packages="git podman dotnet8"
+echo "Detecting / Installing necessary Ubuntu tools"
+if ! command -v git &> /dev/null; then
+    apt update
+    apt install -y ${apt_packages}
+fi
+if ! command -v podman &> /dev/null; then
+    apt update
+    apt install -y ${apt_packages}
+fi
+if ! command -v dotnet &> /dev/null; then
+    apt update
+    apt install -y ${apt_packages}
+fi
+
+
 # Check for required environment variable
 if [ ! -d "${CDOCS_MARKDOWN_RENDER_PATH}" ]; then
     git clone --branch user/chgray/update_ubuntu http://github.com/chgray/CDocs ${CDOCS_MARKDOWN_RENDER_PATH}
 fi
 
 export PATH=${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender/bin/Debug/net8.0:$PATH$
-
 export | grep CDOCS
 export | grep DT
+
+
+
+
 
 # Verify the path exists and contains the required binary
 if [ ! -f "${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender/bin/Debug/net8.0/CDocsMarkdownCommentRender" ]; then

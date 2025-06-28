@@ -10,4 +10,5 @@ jobs:
         with:
           node-version: '20'
       - run: ls
+      - run: docker run ubuntu df
       - run: ./tools/PreCheckinUpdate.sh
