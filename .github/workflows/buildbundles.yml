@@ -1,5 +1,5 @@
 name: build-bundles
-run-name: ${{ github.actor }} is learning GitHub Actions
+run-name: ${{ github.actor }} is bundling documents together
 on: [push]
 jobs:
   check-bats-version:
@@ -10,3 +10,4 @@ jobs:
         with:
           node-version: '20'
       - run: ls
+      - run: ./tools/PreCheckinUpdate.sh
