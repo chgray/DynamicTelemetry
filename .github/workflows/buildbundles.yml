@@ -13,3 +13,11 @@ jobs:
       - run: docker run ubuntu df
       - run: ./tools/InstallUbuntuBuildDependencies.sh
       - run: ./tools/PreCheckinUpdate.sh
+      - name: Upload bound_docs as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bound_docs
+          path: |
+            ./docs/bound_docs/*.docx
+            ./docs/bound_docs/*.epub
+            ./docs/bound_docs/*.pdf
