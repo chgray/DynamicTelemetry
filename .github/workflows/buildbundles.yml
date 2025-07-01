@@ -2,15 +2,13 @@ name: build-bundles
 run-name: ${{ github.actor }} is bundling documents together
 on: [push]
 jobs:
-  check-bats-version:
+  Generating-Bound-Versions:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: ls
-      - run: docker run ubuntu df
       - run: ./tools/InstallUbuntuBuildDependencies.sh
       - run: ./tools/PreCheckinUpdate.sh
       - name: Upload bound_docs as artifact
