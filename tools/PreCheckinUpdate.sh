@@ -171,12 +171,15 @@ echo "  INPUT_FILE : $inputFile"
 echo "DT_BOUND_DIR : $DT_BOUND_DIR"
 
 
-args="--toc --toc-depth 4 -N -V papersize=a5 --filter CDocsMarkdownCommentRender"
+args="--toc --toc-depth 4 -N --filter CDocsMarkdownCommentRender"
 
 export CDOCS_FILTER=1
-pandoc $inputFile -o "$DT_BOUND_DIR/epub_$fileName.epub" --epub-cover-image=../orig_media/DynamicTelemetry.CoPilot.Image.png $args
-pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.pdf" -H "$header_path" $args
-pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.docx" $args
+pandoc $inputFile -o "$DT_BOUND_DIR/epub_$fileName.a5.epub" --epub-cover-image=../orig_media/DynamicTelemetry.CoPilot.Image.png -V papersize=a5 $args
+pandoc $inputFile -o "$DT_BOUND_DIR/epub_$fileName.a8.epub" --epub-cover-image=../orig_media/DynamicTelemetry.CoPilot.Image.png -V papersize=a8 $args
+pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.a5.pdf" -H "$header_path" -V papersize=a5 $args
+pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.a8.pdf" -H "$header_path" -V papersize=a8 $args
+pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.a5.docx" -V papersize=a5 $args
+pandoc $inputFile -o "$DT_BOUND_DIR/$fileName.a8.docx" -V papersize=a8 $args
 pandoc ./bound.md -o "$DT_BOUND_DIR/$fileName.json" $args
 
 echo "Done!"
