@@ -10,7 +10,7 @@ export DEBIAN_FRONTEND=noninteractive
 #
 # Install necessary tools, if they're not already present
 #
-apt_packages="git podman dotnet8 gnuplot pandoc dos2unix"
+apt_packages="git podman dotnet8 gnuplot pandoc dos2unix texlive-latex-base texlive-fonts-recommended texlive-latex-recommended"
 echo "Detecting / Installing necessary Ubuntu tools"
 if ! command -v git &> /dev/null; then
     echo "Installing Git"
@@ -39,6 +39,11 @@ if ! command -v pandoc &> /dev/null; then
 fi
 if ! command -v dos2unix &> /dev/null; then
     echo "Installing dos2unix"
+    sudo apt update
+    sudo apt install -y ${apt_packages}
+fi
+if ! command -v pdflatex &> /dev/null; then
+    echo "Installing pdflatex"
     sudo apt update
     sudo apt install -y ${apt_packages}
 fi
