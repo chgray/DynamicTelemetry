@@ -123,7 +123,7 @@ def process_markdown_files(docs_dir, bound_docs_dir, mkdocs_content):
             # Process existing markdown file
             file_path = line.strip().split(':')[1].strip()
             file_path = os.path.join(docs_dir, file_path)
-            
+
             if not os.path.exists(file_path):
                 msg = f"BAD: File doesn't exist: {file_path}"
                 raise FileNotFoundError(msg)
