@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-
 SCRIPT_PATH=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 echo "Script path: $SCRIPT_PATH"
 
@@ -9,8 +8,6 @@ export CDOCS_MARKDOWN_RENDER_PATH=$(realpath ${SCRIPT_PATH}/../../CDocs)
 export DT_BOUND_DIR=$(realpath ${SCRIPT_PATH}/../docs/bound_docs)
 export DT_DOCS_DIR=$(realpath ${SCRIPT_PATH}/../docs/docs)
 export DT_ORIG_MEDIA_DIR=$(realpath ${SCRIPT_PATH}/../docs/orig_media)
-
-ls
 
 # Check for required environment variable
 if [ ! -d "${CDOCS_MARKDOWN_RENDER_PATH}" ]; then
@@ -25,7 +22,6 @@ export | grep DT
 if [ ! -f "${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender/bin/Debug/net8.0/CDocsMarkdownCommentRender" ]; then
     echo "ERROR: CDocsMarkdownCommentRender binary not found in CDOCS_MARKDOWN_RENDER_PATH: ${CDOCS_MARKDOWN_RENDER_PATH}"
     dotnet build ${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender
-    #exit 1
 fi
 if [ ! -f "${CDOCS_MARKDOWN_RENDER_PATH}/tools/CDocsMarkdownCommentRender/bin/Debug/net8.0/CDocsMarkdownCommentRender" ]; then
     echo "ERROR: CDocsMarkdownCommentRender binary not found in CDOCS_MARKDOWN_RENDER_PATH: ${CDOCS_MARKDOWN_RENDER_PATH}"
@@ -169,7 +165,6 @@ fi
 
 echo "  INPUT_FILE : $inputFile"
 echo "DT_BOUND_DIR : $DT_BOUND_DIR"
-
 
 args="--toc --toc-depth 4 -N --filter CDocsMarkdownCommentRender"
 

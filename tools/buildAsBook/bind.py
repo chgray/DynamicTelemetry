@@ -47,7 +47,6 @@ def copy_doc_files(source_dir, dest_dir):
 def run_pandoc(cmd, dest_file):
     """Run Pandoc"""
 
-
     print("")
     print("")
     print("--------------------------------")
@@ -122,13 +121,9 @@ def process_markdown_files(docs_dir, bound_docs_dir, mkdocs_content):
                 f.write(f"# {title}\n")
         else:
             # Process existing markdown file
-            #print(f"     LINE : {line}")
             file_path = line.strip().split(':')[1].strip()
             file_path = os.path.join(docs_dir, file_path)
-
-            #print(f" DOCS_DIR : {docs_dir}")
-            #print(f"FILE_PATH : {file_path}")
-
+            
             if not os.path.exists(file_path):
                 msg = f"BAD: File doesn't exist: {file_path}"
                 raise FileNotFoundError(msg)
