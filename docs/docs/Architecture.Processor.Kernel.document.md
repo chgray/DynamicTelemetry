@@ -19,14 +19,14 @@ Among the four possible Processor locations, the Kernel Processor demands the
 most careful consideration. Its elevated privileges and system-wide scope
 introduce significant advantages, but if misapplied could also introduce
 security and privacy implications. Deciding to use a kernel-mode Processor
-should involve a  evaluation of your specific requirements, risks , and
+should involve an evaluation of your specific requirements, risks, and
 benefits, as its impact extends to all user-mode activity on the machine.
 
-1. **OTLP and gRPC remain relevant**: These protocols remain in use are used for
+1. **OTLP and gRPC remain relevant**: These protocols are still used for
    communication between the Aggregation Process and the Ingestion Gateway.
 2. **Ideal for systems and OS-level code**: Their lightweight nature makes them
    particularly suitable for integration with systems and OS code. For example,
-   as an alterative to ETW's API's on Windows, or "rolling your own" in Linux.
+   as an alternative to ETW APIs on Windows, or "rolling your own" in Linux.
 3. **Seamless integration with OS functionality**: They enable direct
    connections to existing OS features, such as stack walking, advanced
    debugging facilities, and eBPF integration.
@@ -62,11 +62,11 @@ Kernel-mode operation enables access to very high-speed telemetry mechanisms:
 
 - **Ultra-fast enablement/disablement of logging**: Leveraging capabilities
   found in both **ETW (Event Tracing for Windows)** and **user_events** for
-  extreamly performant, in process, verbosity toggling
+  extremely performant, in-process, verbosity toggling
 - **Reduced-copy telemetry collection**: Reduced copying of buffers, by
   utilizing non-paged kernel memory
-- **Delivery of logging; even upon process crash**
-- **Easier ablity to extract logging**, from kernel panics or system resets
+- **Delivery of logging, even upon process crash**
+- **Easier ability to extract logging**, from kernel panics or system resets
 - **High-frequency sampling**: Capabilities that would be prohibitively
   expensive in user-mode
 
@@ -80,15 +80,15 @@ impossible or severely limited in user-mode:
   is made
 - **[Memory dumps](./Architecture.Action.MemoryDump.document.md)**: Complete
   process or system memory snapshots, with the offending caller fully on thread.
-  Exceptionally powerful concept when coupled with loose schemas (eg: asserts)
+  Exceptionally powerful concept when coupled with loose schemas (e.g., asserts)
 - **[eBPF program integration](./Architecture.Probe.eBPF.document.md)**:
   Potentially using **OpenTelemetry logs as inputs into eBPF, much like syscalls
-  today programs** for real-time analysis and filtering
+  do today**, for real-time analysis and filtering
 - **Cross-process telemetry correlation**: Unified view of telemetry across all
   processes on the system
 - **Kernel-level event filtering and aggregation**: Dropping or modifying
-  telemetry, as it leaves user mode, and before it reaches other downstream
-  user-mode processing. Great for saving costs, and privacy.
+  telemetry as it leaves user mode, and before it reaches other downstream
+  user-mode processing. Great for saving costs and privacy.
 
 These capabilities make kernel-mode processing particularly attractive for:
 
