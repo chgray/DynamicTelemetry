@@ -5,7 +5,6 @@ status: ReviewLevel1b
 
 # Kernel Processor
 
-
 The Kernel Processor operates within the kernel of a monitored machine,
 providing a centralized point for collecting telemetry from all processes and
 services running on that machine. Unlike user-mode Processors, it has the unique
@@ -20,8 +19,8 @@ Among the four possible Processor locations, the Kernel Processor demands the
 most careful consideration. Its elevated privileges and system-wide scope
 introduce significant advantages, but if misapplied could also introduce
 security and privacy implications. Deciding to use a kernel-mode Processor
-should involve a  evaluation of your specific requirements, risks , and benefits,
-as its impact extends to all user-mode activity on the machine.
+should involve a  evaluation of your specific requirements, risks , and
+benefits, as its impact extends to all user-mode activity on the machine.
 
 1. **OTLP and gRPC remain relevant**: These protocols remain in use are used for
    communication between the Aggregation Process and the Ingestion Gateway.
@@ -63,9 +62,9 @@ Kernel-mode operation enables access to very high-speed telemetry mechanisms:
 
 - **Ultra-fast enablement/disablement of logging**: Leveraging capabilities
   found in both **ETW (Event Tracing for Windows)** and **user_events** for
-  extreamly performant, in process, verbocity toggling
+  extreamly performant, in process, verbosity toggling
 - **Reduced-copy telemetry collection**: Reduced copying of buffers, by
-  utilizing unpagable kernel memory
+  utilizing non-paged kernel memory
 - **Delivery of logging; even upon process crash**
 - **Easier ablity to extract logging**, from kernel panics or system resets
 - **High-frequency sampling**: Capabilities that would be prohibitively
@@ -76,18 +75,20 @@ Kernel-mode operation enables access to very high-speed telemetry mechanisms:
 Kernel-mode processors can perform sophisticated diagnostic actions that are
 impossible or severely limited in user-mode:
 
-- **[Callstack walking](./Architecture.Action.CallstackWalk.document.md)**: Deep stack trace collection across process boundaries
-  and privilege levels
-- **[Memory dumps](./Architecture.Action.MemoryDump.document.md)**: Complete process or system memory snapshots with
-  kernel-level access
+- **[Callstack walking](./Architecture.Action.CallstackWalk.document.md)**:
+  Ability to walk the callstack, when particular (potentially triggered) logging
+  is made
+- **[Memory dumps](./Architecture.Action.MemoryDump.document.md)**: Complete
+  process or system memory snapshots, with the offending caller fully on thread.
+  Exceptionally powerful concept when coupled with loose schemas (eg: asserts)
 - **[eBPF program integration](./Architecture.Probe.eBPF.document.md)**:
-  Potentiall using **OpenTelemetry logs as inputs into eBPF, much like syscalls
-  today
-  programs** for real-time analysis and filtering
+  Potentially using **OpenTelemetry logs as inputs into eBPF, much like syscalls
+  today programs** for real-time analysis and filtering
 - **Cross-process telemetry correlation**: Unified view of telemetry across all
   processes on the system
-- **Kernel-level event filtering and aggregation**: Dropping or modifying telemetry at the
-  kernel level before it reaches user-mode processing.
+- **Kernel-level event filtering and aggregation**: Dropping or modifying
+  telemetry, as it leaves user mode, and before it reaches other downstream
+  user-mode processing. Great for saving costs, and privacy.
 
 These capabilities make kernel-mode processing particularly attractive for:
 
