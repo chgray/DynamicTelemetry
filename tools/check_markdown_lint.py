@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
+import json
+import subprocess
 import sys
+
 from pathlib import Path
 from typing import List, Dict
-import subprocess
-import json
 
 def find_markdown_files(base_path: str) -> List[Path]:
     """Recursively find all markdown files in the given directory."""
