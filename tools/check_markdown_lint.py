@@ -62,7 +62,7 @@ def main():
         print("All markdown files conform to the style guide.")
         print("\nCompliant files:")
         for file in good_files:
-            print(f"\033[32m✓ {file}\033[0m")
+            print(f"    {file}")
     else:
         sys.exit(1)
 
