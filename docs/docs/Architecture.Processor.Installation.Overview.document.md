@@ -5,7 +5,7 @@ status: ReviewLevel1
 
 # Processor Installation Overview : COMING SOON
 
-In short, there are four locations that Can accept one of the three different
+In short, there are four locations that can accept one of the three different
 dynamic telemetry processors.
 
 ![](../orig_media/Architecture.Boxes.Full.DynamicTelemetry.drawio.png)
